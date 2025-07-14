@@ -37,18 +37,19 @@ chatForm.addEventListener("submit", (e) => {
       "You are a helpful assistant for L'Oréal. Politely refuse to answer any questions that are not related to L'Oréal products, routines, recommendations, beauty-related topics, or similar.",
   };
 
+  const workerurl = "https://nameless-thunder-699e.esilmone.workers.dev/";
+
   // Build messages array
   const messages = [systemMessage, { role: "user", content: userMessage }];
 
   // Show loading message
   addMessage("Thinking...", "ai");
 
-  // Make the API request
-  fetch(url, {
+  // Make the API request to workerurl only
+  fetch(workerurl, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `Bearer ${apiKey}`,
     },
     body: JSON.stringify({
       model: "gpt-4o",
@@ -56,22 +57,20 @@ chatForm.addEventListener("submit", (e) => {
     }),
   })
     .then((response) => response.json())
-    .then((data) => {
+    .then((workerData) => {
       // Remove loading message
       const loadingMsg = chatWindow.querySelector(".msg.ai:last-child");
       if (loadingMsg && loadingMsg.textContent === "Thinking...") {
         chatWindow.removeChild(loadingMsg);
       }
-
-      // Get and show AI response
-      const aiText =
-        data.choices &&
-        data.choices[0] &&
-        data.choices[0].message &&
-        data.choices[0].message.content
-          ? data.choices[0].message.content
-          : "Sorry, I couldn't get a response.";
-      addMessage(aiText, "ai");
+      const workerText =
+        workerData.choices &&
+        workerData.choices[0] &&
+        workerData.choices[0].message &&
+        workerData.choices[0].message.content
+          ? workerData.choices[0].message.content
+          : "Sorry, no response from worker.";
+      addMessage(workerText, "ai");
     })
     .catch((error) => {
       // Remove loading message
@@ -79,6 +78,6 @@ chatForm.addEventListener("submit", (e) => {
       if (loadingMsg && loadingMsg.textContent === "Thinking...") {
         chatWindow.removeChild(loadingMsg);
       }
-      addMessage("Error: " + error.message, "ai");
+      addMessage("Worker error: " + error.message, "ai");
     });
 });
