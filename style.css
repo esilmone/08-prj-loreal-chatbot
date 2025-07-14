@@ -122,10 +122,16 @@ body {
 
 /* footer */
 .site-footer {
-  margin: 60px 0 40px;
+  background: #e3a535;
+  color: #333;
   text-align: center;
   font-size: 14px;
-  color: #666;
+  width: 100%;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  padding: 18px 0 12px 0;
+  z-index: 10;
 }
 
 .site-footer nav {
